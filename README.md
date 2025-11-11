@@ -1,1 +1,0 @@
-# JURIDICO_BI

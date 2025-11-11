@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  dash_app:
+    build: .
+    container_name: dash_app
+    ports:
+      - "8050:8050"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=1433
+      - DB_NAME=bi_juridico
+      - DB_USER=sa
+      - DB_PASSWORD=YourStrong@Passw0rd
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: dash_sqlserver
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: YourStrong@Passw0rd
+      MSSQL_PID: Express
+    volumes:
+      - sqldata:/var/opt/mssql
+      - ./init.sql:/init.sql
+    ports:
+      - "1433:1433"
+    restart: unless-stopped
+
+volumes:
+  sqldata:
